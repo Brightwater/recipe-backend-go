@@ -1,0 +1,30 @@
+info:
+  contact: {}
+paths:
+  /helloworld:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Hello World
+  /testAuth:
+    get:
+      parameters:
+      - description: JWT
+        in: query
+        name: jwt
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+      summary: Test Authentication
+swagger: "2.0"

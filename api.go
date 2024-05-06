@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"path"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -29,23 +30,20 @@ func SetupRoutes() *chi.Mux {
 	r.Use(middleware.Logger) // add log middleware
 
 	// Serve the index.html file as the root path
-	// r.Get("/*", func(w http.ResponseWriter, r *http.Request) {
-	// 	http.ServeFile(w, r, path.Join("static", "index.html"))
-	// })
+	r.Get("/*", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, path.Join("static", "index.html"))
+	})
 
 	// Serve static files from the "public" directory
-	// r.Handle("/_app/*", http.FileServer(http.Dir("static")))
-	// r.Handle("/ui/*", http.FileServer(http.Dir("static")))
-	// r.Handle("/fonts/*", http.FileServer(http.Dir("static")))
+	r.Handle("/_app/*", http.FileServer(http.Dir("static")))
 
-	r.Get("/", http.RedirectHandler("/docs/", http.StatusMovedPermanently).ServeHTTP)
-	r.Get("/docs", http.RedirectHandler("/docs/", http.StatusMovedPermanently).ServeHTTP)
-	r.Get("/docs/*", httpSwagger.Handler())
+	r.Get("/api/docs", http.RedirectHandler("/docs/", http.StatusMovedPermanently).ServeHTTP)
+	r.Get("/api/docs/*", httpSwagger.Handler())
 
-	r.Get("/helloworld", hello)
-	r.Get("/testAuth", testAuth)
-	r.Get("/recipe/getAllRecipes", getAllRecipes)
-	r.Post("/recipe/addRecipe/", addRecipe)
+	r.Get("/api/helloworld", hello)
+	r.Get("/api/testAuth", testAuth)
+	r.Get("/api/recipe/getAllRecipes", getAllRecipes)
+	r.Post("/api/recipe/addRecipe/", addRecipe)
 
 	return r
 }

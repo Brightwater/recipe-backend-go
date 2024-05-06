@@ -1,3 +1,14 @@
+definitions:
+  main.Recipe:
+    properties:
+      author:
+        type: string
+      data: {}
+      id:
+        type: integer
+      ts:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -11,6 +22,50 @@ paths:
           schema:
             type: string
       summary: Hello World
+  /recipe/addRecipe:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: JWT
+        in: query
+        name: jwt
+        required: true
+        type: string
+      - description: Recipe data
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/main.Recipe'
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Adds a new recipe into the database
+  /recipe/getAllRecipes:
+    get:
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Gets all recipes from the database
   /testAuth:
     get:
       parameters:

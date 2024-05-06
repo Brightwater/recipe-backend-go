@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -43,6 +44,8 @@ func SetupRoutes() *chi.Mux {
 
 	r.Get("/helloworld", hello)
 	r.Get("/testAuth", testAuth)
+	r.Get("/recipe/getAllRecipes", getAllRecipes)
+	r.Post("/recipe/addRecipe/", addRecipe)
 
 	return r
 }
@@ -64,18 +67,93 @@ func hello(w http.ResponseWriter, r *http.Request) {
 
 // @Summary Test Authentication
 // @Success 200 {string} string "ok"
-// @Success 401
+// @Failure 401
 // @Param jwt query string true "JWT"
 // @Router /testAuth [get]
 func testAuth(w http.ResponseWriter, r *http.Request) {
 	jwt := r.URL.Query().Get("jwt")
 
-	err := VerifyTokenAndScope(jwt)
+	_, err := VerifyTokenAndScope(jwt)
 	if err != nil {
 		// return auth error to client
 		w.WriteHeader(http.StatusUnauthorized)
 	}
 
 	// return ok to client
+	w.WriteHeader(http.StatusOK)
+}
+
+// @Summary Gets all recipes from the database
+// @Success 200 {string} string "ok"
+// @Failure 500 {string} server error
+// @Router /recipe/getAllRecipes [get]
+func getAllRecipes(w http.ResponseWriter, r *http.Request) {
+
+	recipes, err := GetAllRecipes()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	json, err := json.Marshal(recipes)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	_, err = w.Write(json)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+// @Summary Adds a new recipe into the database
+// @Accept json
+// @Param jwt query string true "JWT"
+// @Param recipe body Recipe true "Recipe data"
+// @Success 200 {string} string "ok"
+// @Failure 400 {string} bad request
+// @Failure 401
+// @Failure 500 {string} server error
+// @Router /recipe/addRecipe [post]
+func addRecipe(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("adding recipe")
+	// param is a jwt token
+	jwt := r.URL.Query().Get("jwt")
+
+	username, err := VerifyTokenAndScope(jwt)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// body is a recipe
+	var recipe Recipe = Recipe{}
+
+	err = json.NewDecoder(r.Body).Decode(&recipe)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		_, err := w.Write([]byte("Error: " + err.Error()))
+		if err != nil {
+			fmt.Println("Error writing response:", err)
+			http.Error(w, "Failed to write response", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	recipe.Author = username
+
+	err = AddRecipe(&recipe)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		_, err := w.Write([]byte("Error: " + err.Error()))
+		if err != nil {
+			fmt.Println("Error writing response:", err)
+			http.Error(w, "Failed to write response", http.StatusInternalServerError)
+		}
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 }

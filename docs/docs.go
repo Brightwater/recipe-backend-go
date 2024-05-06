@@ -31,6 +31,74 @@ const docTemplate = `{
                 }
             }
         },
+        "/recipe/addRecipe": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "summary": "Adds a new recipe into the database",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWT",
+                        "name": "jwt",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "Recipe data",
+                        "name": "recipe",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Recipe"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/recipe/getAllRecipes": {
+            "get": {
+                "summary": "Gets all recipes from the database",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/testAuth": {
             "get": {
                 "summary": "Test Authentication",
@@ -53,6 +121,23 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized"
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.Recipe": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "data": {},
+                "id": {
+                    "type": "integer"
+                },
+                "ts": {
+                    "type": "string"
                 }
             }
         }

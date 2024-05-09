@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/helloworld": {
+        "/api/helloworld": {
             "get": {
                 "produces": [
                     "application/json"
@@ -31,7 +31,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipe/addRecipe": {
+        "/api/recipe/addRecipe": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -80,7 +80,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipe/getAllRecipes": {
+        "/api/recipe/getAllRecipes": {
             "get": {
                 "summary": "Gets all recipes from the database",
                 "responses": {
@@ -99,7 +99,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/testAuth": {
+        "/api/testAuth": {
             "get": {
                 "summary": "Test Authentication",
                 "parameters": [

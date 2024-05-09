@@ -51,7 +51,7 @@ func SetupRoutes() *chi.Mux {
 // @Summary Hello World
 // @Produce json
 // @Success 200 {string} string "ok"
-// @Router /helloworld [get]
+// @Router /api/helloworld [get]
 func hello(w http.ResponseWriter, r *http.Request) {
 
 	_, err := w.Write([]byte("Hello World"))
@@ -67,7 +67,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {string} string "ok"
 // @Failure 401
 // @Param jwt query string true "JWT"
-// @Router /testAuth [get]
+// @Router /api/testAuth [get]
 func testAuth(w http.ResponseWriter, r *http.Request) {
 	jwt := r.URL.Query().Get("jwt")
 
@@ -84,7 +84,7 @@ func testAuth(w http.ResponseWriter, r *http.Request) {
 // @Summary Gets all recipes from the database
 // @Success 200 {string} string "ok"
 // @Failure 500 {string} server error
-// @Router /recipe/getAllRecipes [get]
+// @Router /api/recipe/getAllRecipes [get]
 func getAllRecipes(w http.ResponseWriter, r *http.Request) {
 
 	recipes, err := GetAllRecipes()
@@ -114,7 +114,7 @@ func getAllRecipes(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {string} bad request
 // @Failure 401
 // @Failure 500 {string} server error
-// @Router /recipe/addRecipe [post]
+// @Router /api/recipe/addRecipe [post]
 func addRecipe(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("adding recipe")
 	// param is a jwt token

@@ -4,7 +4,7 @@
         "contact": {}
     },
     "paths": {
-        "/helloworld": {
+        "/api/helloworld": {
             "get": {
                 "produces": [
                     "application/json"
@@ -20,7 +20,7 @@
                 }
             }
         },
-        "/recipe/addRecipe": {
+        "/api/recipe/addRecipe": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -69,7 +69,7 @@
                 }
             }
         },
-        "/recipe/getAllRecipes": {
+        "/api/recipe/getAllRecipes": {
             "get": {
                 "summary": "Gets all recipes from the database",
                 "responses": {
@@ -88,7 +88,7 @@
                 }
             }
         },
-        "/testAuth": {
+        "/api/testAuth": {
             "get": {
                 "summary": "Test Authentication",
                 "parameters": [
